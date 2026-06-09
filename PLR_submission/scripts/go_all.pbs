@@ -1,0 +1,143 @@
+#!/bin/bash
+#PBS -q short_cpuQ
+#PBS -l walltime=00:30:00
+#PBS -l select=1:ncpus=8
+
+cd $PBS_O_WORKDIR
+
+source /etc/profile
+module purge
+module load GCC/12.3.0
+module load OpenMPI/4.1.5-GCC-12.3.0
+
+cd src && make && cd ..
+
+BIN=src
+mkdir -p results
+
+echo "Start $(date)"
+
+# GISETTE  4800 train, 5000 dense features
+# epochs=100  lr=0.01  lambda=0.01
+
+GT=data/gisette/gisette_local_train.svm
+GS=data/gisette/gisette_local_test.svm
+GE=100; GLR=0.01; GL=0.01
+
+echo "Gisette seq"
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq.log 2>&1
+echo "Gisette omp"
+$BIN/omp  $GT $GS $GE $GLR $GL 1        > results/gisette_omp_1.log 2>&1
+$BIN/omp  $GT $GS $GE $GLR $GL 2        > results/gisette_omp_2.log 2>&1
+$BIN/omp  $GT $GS $GE $GLR $GL 4        > results/gisette_omp_4.log 2>&1
+$BIN/omp  $GT $GS $GE $GLR $GL 8        > results/gisette_omp_8.log 2>&1
+echo "Gisette mpi"
+mpirun -np 1 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_1.log 2>&1
+mpirun -np 2 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_2.log 2>&1
+mpirun -np 4 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_4.log 2>&1
+mpirun -np 8 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_8.log 2>&1
+echo "Gisette mpi overlap"
+mpirun -np 2 $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_2_overlap.log 2>&1
+mpirun -np 4 $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_4_overlap.log 2>&1
+mpirun -np 8 $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_8_overlap.log 2>&1
+echo "Gisette repeats"
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq_run1.log 2>&1
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq_run2.log 2>&1
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq_run3.log 2>&1
+$BIN/omp  $GT $GS $GE $GLR $GL 8        > results/gisette_omp8_run1.log 2>&1
+$BIN/omp  $GT $GS $GE $GLR $GL 8        > results/gisette_omp8_run2.log 2>&1
+$BIN/omp  $GT $GS $GE $GLR $GL 8        > results/gisette_omp8_run3.log 2>&1
+mpirun -np 4 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi4_run1.log 2>&1
+mpirun -np 4 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi4_run2.log 2>&1
+mpirun -np 4 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi4_run3.log 2>&1
+
+# 20NEWSGROUP SMALL  1177 train, 130107 sparse features, 2 classes
+# epochs=200  lr=1.0  lambda=0.001
+
+NT=data/20newsgroup/20newsgroup_train.svm
+NS=data/20newsgroup/20newsgroup_test.svm
+NE=200; NLR=1.0; NL=0.001
+
+echo "News-small seq"
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq.log 2>&1
+echo "News-small omp"
+$BIN/omp  $NT $NS $NE $NLR $NL 1        > results/news_small_omp_1.log 2>&1
+$BIN/omp  $NT $NS $NE $NLR $NL 2        > results/news_small_omp_2.log 2>&1
+$BIN/omp  $NT $NS $NE $NLR $NL 4        > results/news_small_omp_4.log 2>&1
+$BIN/omp  $NT $NS $NE $NLR $NL 8        > results/news_small_omp_8.log 2>&1
+echo "News-small mpi"
+mpirun -np 1 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_1.log 2>&1
+mpirun -np 2 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_2.log 2>&1
+mpirun -np 4 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_4.log 2>&1
+mpirun -np 8 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_8.log 2>&1
+echo "News-small mpi overlap"
+mpirun -np 2 $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_2_overlap.log 2>&1
+mpirun -np 4 $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_4_overlap.log 2>&1
+mpirun -np 8 $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_8_overlap.log 2>&1
+echo "News-small repeats"
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq_run1.log 2>&1
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq_run2.log 2>&1
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq_run3.log 2>&1
+$BIN/omp  $NT $NS $NE $NLR $NL 8        > results/news_small_omp8_run1.log 2>&1
+$BIN/omp  $NT $NS $NE $NLR $NL 8        > results/news_small_omp8_run2.log 2>&1
+$BIN/omp  $NT $NS $NE $NLR $NL 8        > results/news_small_omp8_run3.log 2>&1
+mpirun -np 4 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi4_run1.log 2>&1
+mpirun -np 4 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi4_run2.log 2>&1
+mpirun -np 4 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi4_run3.log 2>&1
+
+# 20NEWSGROUP FULL  11314 train, 130107 sparse features, 20 classes->binary
+# epochs=200  lr=1.0  lambda=0.001
+
+FT=data/20newsgroup_full/20newsgroup_full_train.svm
+FS=data/20newsgroup_full/20newsgroup_full_test.svm
+FE=200; FLR=1.0; FL=0.001
+
+echo "News-full seq"
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq.log 2>&1
+echo "News-full omp"
+$BIN/omp  $FT $FS $FE $FLR $FL 1        > results/news_full_omp_1.log 2>&1
+$BIN/omp  $FT $FS $FE $FLR $FL 2        > results/news_full_omp_2.log 2>&1
+$BIN/omp  $FT $FS $FE $FLR $FL 4        > results/news_full_omp_4.log 2>&1
+$BIN/omp  $FT $FS $FE $FLR $FL 8        > results/news_full_omp_8.log 2>&1
+echo "News-full mpi"
+mpirun -np 1 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_1.log 2>&1
+mpirun -np 2 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_2.log 2>&1
+mpirun -np 4 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_4.log 2>&1
+mpirun -np 8 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_8.log 2>&1
+echo "News-full mpi overlap"
+mpirun -np 2 $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_2_overlap.log 2>&1
+mpirun -np 4 $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_4_overlap.log 2>&1
+mpirun -np 8 $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_8_overlap.log 2>&1
+echo "News-full repeats"
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq_run1.log 2>&1
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq_run2.log 2>&1
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq_run3.log 2>&1
+$BIN/omp  $FT $FS $FE $FLR $FL 8        > results/news_full_omp8_run1.log 2>&1
+$BIN/omp  $FT $FS $FE $FLR $FL 8        > results/news_full_omp8_run2.log 2>&1
+$BIN/omp  $FT $FS $FE $FLR $FL 8        > results/news_full_omp8_run3.log 2>&1
+mpirun -np 4 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi4_run1.log 2>&1
+mpirun -np 4 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi4_run2.log 2>&1
+mpirun -np 4 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi4_run3.log 2>&1
+
+echo "Done $(date)"
+
+# SUMMARY
+{
+echo "TIMING"
+for f in results/gisette_*.log results/news_small_*.log results/news_full_*.log; do
+  echo "$f"
+  tail -2 "$f"
+done
+
+echo "CONVERGENCE"
+echo "Gisette seq"
+grep -E "^\[seq\] epoch (1|10|20|30|40|50|60|70|80|90|100) " results/gisette_seq.log
+
+echo "News-small seq"
+grep -E "^\[seq\] epoch (1|20|40|60|80|100|120|140|160|180|200) " results/news_small_seq.log
+
+echo "News-full seq"
+grep -E "^\[seq\] epoch (1|20|40|60|80|100|120|140|160|180|200) " results/news_full_seq.log
+} > results/SUMMARY.txt
+
+cat results/SUMMARY.txt
