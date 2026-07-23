@@ -19,7 +19,7 @@ I run everything on the unitn HPC cluster (`hpc.unitn.it`) from Windows using VP
 In the MobaXterm terminal:
 
 ```bash
-cd ~/PLR-submission
+cd ~/PLR_submission
 pwd
 ls
 ```
@@ -43,13 +43,6 @@ cd ..
 
 This builds `src/seq`, `src/omp`, `src/mpi`.
 
-(if 20News `.svm` files are missed)
-
-```bash
-pip install --user scikit-learn
-python3 scripts/export_20newsgroups_binary.py
-python3 scripts/export_20newsgroups_full.py
-```
 
 ### Step 6  Submit all experiments
 
@@ -66,7 +59,7 @@ Then submit:
 qsub scripts/go_all.pbs
 ```
 
-`go_all.pbs` uses queue `short_cpuQ`, `#PBS -l select=1:ncpus=8`, walltime 30 minutes. logs go to `results/`; PBS stdout/stderr go to `go_all.o<JOBID>` and `go_all.e<JOBID>`. `results/SUMMARY.txt` is written.
+`go_all.pbs` uses queue **`shortCPUQ`**, `#PBS -l select=16:ncpus=4:mpiprocs=4` (16 nodes, 64 CPUs). MPI jobs use an Open MPI hostfile built from `$PBS_NODEFILE`. Logs go to `results/`; PBS stdout/stderr go to `lr_all_64.o<JOBID>` and `lr_all_64.e<JOBID>`. `results/SUMMARY.txt` is written at the end.
 
 ### Step 7  Check job status
 
@@ -81,11 +74,13 @@ Q = queued, R = running, gone from list = finished (or failed).
 When finished,
 
 ```bash
-ls go_all.o* go_all.e* 2>/dev/null
-ls results | wc -l
+ls lr_all_64.o* lr_all_64.e* 2>/dev/null
+ls results/*.log | wc -l
 cat results/SUMMARY.txt
-tail -2 results/gisette_seq.log
+tail -2 results/gisette_mpi_64.log
 ```
+
+Expect ninety-one `.log` files and `Training finished` in `gisette_mpi_64.log` without `not enough slots`.
 
 ### Step 8 Download results
 for the results, right-click Download or drag to local folder.
@@ -100,10 +95,10 @@ Same download `results/SUMMARY.txt` or updated `data/` if needed.
 | 20News 2-class | 1177 | 783 | 130107 |
 | 20News full | 11314 | 7532 | 130107 |
 
-Gisette: `data/gisette/*.svm`. 20News: exported by scripts in `scripts/` (need `scikit-learn` on the cluster: `pip install --user scikit-learn`).
+Gisette: `data/gisette/*.svm`. 20News: exported by scripts in `scripts/` (need `pip install --user scikit-learn`).
 
-- **20NewsGroup 2-class** (`comp.graphics` vs `sci.space`): `python3 scripts/export_20newsgroups_binary.py`
-- **20NewsGroup full** (categories 0--9 vs 10--19): `python3 scripts/export_20newsgroups_full.py`
+- 20NewsGroup 2-class (`comp.graphics` vs `sci.space`): `python3 scripts/export_20newsgroups_binary.py`
+- 20NewsGroup full  (categories 0--9 vs 10--19): `python3 scripts/export_20newsgroups_full.py`
 
 Both scripts accept optional flags such as `--out-dir`, `--prefix`, and (for the binary script) `--class-a`, `--class-b`, `--list-categories`. Defaults write to `data/20newsgroup/` and `data/20newsgroup_full/`.
 
@@ -116,7 +111,10 @@ cd src
 mpirun -np N ./mpi <train.svm> <test.svm> <epochs> <lr> [lambda] [overlap]
 ```
 
-(cd src
+Examples for all three datasets (run from `src/`):
+
+```bash
+cd src
 ./seq ../data/gisette/gisette_local_train.svm ../data/gisette/gisette_local_test.svm 100 0.01 0.01
 ./omp ../data/gisette/gisette_local_train.svm ../data/gisette/gisette_local_test.svm 100 0.01 0.01 4
 mpirun -np 4 ./mpi ../data/gisette/gisette_local_train.svm ../data/gisette/gisette_local_test.svm 100 0.01 0.01 0
@@ -129,18 +127,23 @@ mpirun -np 4 ./mpi ../data/20newsgroup/20newsgroup_train.svm ../data/20newsgroup
 cd src
 ./seq ../data/20newsgroup_full/20newsgroup_full_train.svm ../data/20newsgroup_full/20newsgroup_full_test.svm 200 1.0 0.001
 ./omp ../data/20newsgroup_full/20newsgroup_full_train.svm ../data/20newsgroup_full/20newsgroup_full_test.svm 200 1.0 0.001 4
-mpirun -np 4 ./mpi ../data/20newsgroup_full/20newsgroup_full_train.svm ../data/20newsgroup_full/20newsgroup_full_test.svm 200 1.0 0.001 0)
+mpirun -np 4 ./mpi ../data/20newsgroup_full/20newsgroup_full_train.svm ../data/20newsgroup_full/20newsgroup_full_test.svm 200 1.0 0.001 0
+```
+
+if need MPI with several nodes on the cluster, do not just run `mpirun -np 64 ./mpi ...` (fails with `not enough slots`), submit the script "qsub scripts/go_all.pbs"
+which runs all seq / OpenMP / MPI experiments and starts MPI on every node that PBS gives.
 
 `overlap`: 0 = `MPI_Allreduce`, 1 = `MPI_Iallreduce`.
 
-Defaults: Gisette 100 epochs, lr 0.01, lambda 0.01; 20News 200 epochs, lr 1.0, lambda 0.001. Thread/process counts 1, 2, 4, 8.
+Defaults: Gisette 100 epochs, lr 0.01, lambda 0.01; 20News 200 epochs, lr 1.0, lambda 0.001.
+
+in `go_all.pbs`: OpenMP 1, 2, 4, 8 threads; MPI 1, 2, 4, 8, 16, 32, 64 processes.
 
 Output: one line per epoch with time, train/test loss and accuracy.
 
-
 ## Results
 
-63 log files in `results/`, report figures in `plots/`: `accuracy.png`, `speedup.png`.
+91 log files in `results/`, `results/SUMMARY.txt`. Figures in `plots/`: `accuracy.png`, `speedup.png`, `efficiency.png`.
 
 ## Clean
 
