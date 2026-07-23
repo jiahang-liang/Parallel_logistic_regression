@@ -1,0 +1,308 @@
+select=16:ncpus=4:mpiprocs=4 (64 cores total)
+results/gisette_mpi_16.log
+[mpi] epoch 100 time 0.245231s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.245247 seconds.
+results/gisette_mpi_16_overlap.log
+[mpi] epoch 100 time 0.244064s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.244079 seconds.
+results/gisette_mpi_1.log
+[mpi] epoch 100 time 1.22845s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 1.22847 seconds.
+results/gisette_mpi_2.log
+[mpi] epoch 100 time 0.689667s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.689686 seconds.
+results/gisette_mpi_2_overlap.log
+[mpi] epoch 100 time 0.687957s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.687984 seconds.
+results/gisette_mpi_32.log
+[mpi] epoch 100 time 0.225081s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.225098 seconds.
+results/gisette_mpi_32_overlap.log
+[mpi] epoch 100 time 0.255359s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.255374 seconds.
+results/gisette_mpi_4.log
+[mpi] epoch 100 time 0.410992s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.411013 seconds.
+results/gisette_mpi_4_overlap.log
+[mpi] epoch 100 time 0.412193s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.412207 seconds.
+results/gisette_mpi_64.log
+[mpi] epoch 100 time 0.345479s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.34549 seconds.
+results/gisette_mpi_64_overlap.log
+[mpi] epoch 100 time 0.293615s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.293627 seconds.
+results/gisette_mpi64_run1.log
+[mpi] epoch 100 time 0.295488s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.295499 seconds.
+results/gisette_mpi64_run2.log
+[mpi] epoch 100 time 0.317531s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.317547 seconds.
+results/gisette_mpi64_run3.log
+[mpi] epoch 100 time 0.295217s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.295235 seconds.
+results/gisette_mpi_8.log
+[mpi] epoch 100 time 0.282006s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.282023 seconds.
+results/gisette_mpi_8_overlap.log
+[mpi] epoch 100 time 0.278153s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.27817 seconds.
+results/gisette_mpi8_run1.log
+[mpi] epoch 100 time 0.276555s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.276576 seconds.
+results/gisette_mpi8_run2.log
+[mpi] epoch 100 time 0.27478s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.274794 seconds.
+results/gisette_mpi8_run3.log
+[mpi] epoch 100 time 0.27524s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+Training finished in 0.275254 seconds.
+results/gisette_omp_1.log
+OpenMP threads used: 1
+Training time: 1.24082 seconds
+results/gisette_omp_2.log
+OpenMP threads used: 2
+Training time: 0.914597 seconds
+results/gisette_omp_4.log
+OpenMP threads used: 4
+Training time: 0.745391 seconds
+results/gisette_omp_8.log
+OpenMP threads used: 8
+Training time: 0.664518 seconds
+results/gisette_omp8_run1.log
+OpenMP threads used: 8
+Training time: 0.669112 seconds
+results/gisette_omp8_run2.log
+OpenMP threads used: 8
+Training time: 0.667186 seconds
+results/gisette_omp8_run3.log
+OpenMP threads used: 8
+Training time: 0.662956 seconds
+results/gisette_seq.log
+[seq] epoch 99 time 1.20885s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.22107s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/gisette_seq_run1.log
+[seq] epoch 99 time 1.21579s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.22805s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/gisette_seq_run2.log
+[seq] epoch 99 time 1.20988s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.22208s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/gisette_seq_run3.log
+[seq] epoch 99 time 1.21149s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.22382s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/news_small_mpi_16.log
+[mpi] epoch 200 time 0.925414s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.925522 seconds.
+results/news_small_mpi_16_overlap.log
+[mpi] epoch 200 time 1.10015s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.10031 seconds.
+results/news_small_mpi_1.log
+[mpi] epoch 200 time 0.420816s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.420901 seconds.
+results/news_small_mpi_2.log
+[mpi] epoch 200 time 0.398138s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.398214 seconds.
+results/news_small_mpi_2_overlap.log
+[mpi] epoch 200 time 0.522647s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.522739 seconds.
+results/news_small_mpi_32.log
+[mpi] epoch 200 time 1.07878s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.07881 seconds.
+results/news_small_mpi_32_overlap.log
+[mpi] epoch 200 time 1.1988s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.19882 seconds.
+results/news_small_mpi_4.log
+[mpi] epoch 200 time 0.421672s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.421753 seconds.
+results/news_small_mpi_4_overlap.log
+[mpi] epoch 200 time 0.627479s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.627592 seconds.
+results/news_small_mpi_64.log
+[mpi] epoch 200 time 1.11933s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.11935 seconds.
+results/news_small_mpi_64_overlap.log
+[mpi] epoch 200 time 1.07866s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.07869 seconds.
+results/news_small_mpi64_run1.log
+[mpi] epoch 200 time 1.14714s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.14715 seconds.
+results/news_small_mpi64_run2.log
+[mpi] epoch 200 time 1.13396s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.13409 seconds.
+results/news_small_mpi64_run3.log
+[mpi] epoch 200 time 1.15862s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 1.15864 seconds.
+results/news_small_mpi_8.log
+[mpi] epoch 200 time 0.478578s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.47869 seconds.
+results/news_small_mpi_8_overlap.log
+[mpi] epoch 200 time 0.738027s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.738165 seconds.
+results/news_small_mpi8_run1.log
+[mpi] epoch 200 time 0.474933s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.475034 seconds.
+results/news_small_mpi8_run2.log
+[mpi] epoch 200 time 0.483272s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.483373 seconds.
+results/news_small_mpi8_run3.log
+[mpi] epoch 200 time 0.4821s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+Training finished in 0.482201 seconds.
+results/news_small_omp_1.log
+OpenMP threads used: 1
+Training time: 0.447084 seconds
+results/news_small_omp_2.log
+OpenMP threads used: 2
+Training time: 0.434879 seconds
+results/news_small_omp_4.log
+OpenMP threads used: 4
+Training time: 0.474498 seconds
+results/news_small_omp_8.log
+OpenMP threads used: 8
+Training time: 0.555261 seconds
+results/news_small_omp8_run1.log
+OpenMP threads used: 8
+Training time: 0.556845 seconds
+results/news_small_omp8_run2.log
+OpenMP threads used: 8
+Training time: 0.556933 seconds
+results/news_small_omp8_run3.log
+OpenMP threads used: 8
+Training time: 0.555479 seconds
+results/news_small_seq.log
+[seq] epoch 199 time 0.289255s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.290713s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_small_seq_run1.log
+[seq] epoch 199 time 0.293797s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.295281s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_small_seq_run2.log
+[seq] epoch 199 time 0.289426s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.290856s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_small_seq_run3.log
+[seq] epoch 199 time 0.294488s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.295973s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_full_mpi_16.log
+[mpi] epoch 200 time 1.48706s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.48708 seconds.
+results/news_full_mpi_16_overlap.log
+[mpi] epoch 200 time 1.50524s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.50526 seconds.
+results/news_full_mpi_1.log
+[mpi] epoch 200 time 2.76964s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 2.76966 seconds.
+results/news_full_mpi_2.log
+[mpi] epoch 200 time 1.84752s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.84753 seconds.
+results/news_full_mpi_2_overlap.log
+[mpi] epoch 200 time 1.89378s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.8938 seconds.
+results/news_full_mpi_32.log
+[mpi] epoch 200 time 1.53844s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.53846 seconds.
+results/news_full_mpi_32_overlap.log
+[mpi] epoch 200 time 1.51401s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.51403 seconds.
+results/news_full_mpi_4.log
+[mpi] epoch 200 time 1.39165s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.39166 seconds.
+results/news_full_mpi_4_overlap.log
+[mpi] epoch 200 time 1.47937s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.47938 seconds.
+results/news_full_mpi_64.log
+[mpi] epoch 200 time 1.58427s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.58428 seconds.
+results/news_full_mpi_64_overlap.log
+[mpi] epoch 200 time 1.58439s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.58441 seconds.
+results/news_full_mpi64_run1.log
+[mpi] epoch 200 time 1.60114s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.60116 seconds.
+results/news_full_mpi64_run2.log
+[mpi] epoch 200 time 1.56987s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.56989 seconds.
+results/news_full_mpi64_run3.log
+[mpi] epoch 200 time 1.57724s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.57726 seconds.
+results/news_full_mpi_8.log
+[mpi] epoch 200 time 1.21062s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.21064 seconds.
+results/news_full_mpi_8_overlap.log
+[mpi] epoch 200 time 1.35728s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.3573 seconds.
+results/news_full_mpi8_run1.log
+[mpi] epoch 200 time 1.23097s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.23099 seconds.
+results/news_full_mpi8_run2.log
+[mpi] epoch 200 time 1.20906s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.20908 seconds.
+results/news_full_mpi8_run3.log
+[mpi] epoch 200 time 1.22158s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Training finished in 1.22159 seconds.
+results/news_full_omp_1.log
+OpenMP threads used: 1
+Training time: 2.81743 seconds
+results/news_full_omp_2.log
+OpenMP threads used: 2
+Training time: 2.21463 seconds
+results/news_full_omp_4.log
+OpenMP threads used: 4
+Training time: 1.93827 seconds
+results/news_full_omp_8.log
+OpenMP threads used: 8
+Training time: 1.91667 seconds
+results/news_full_omp8_run1.log
+OpenMP threads used: 8
+Training time: 1.8842 seconds
+results/news_full_omp8_run2.log
+OpenMP threads used: 8
+Training time: 1.89452 seconds
+results/news_full_omp8_run3.log
+OpenMP threads used: 8
+Training time: 1.88338 seconds
+results/news_full_seq.log
+[seq] epoch 199 time 2.68716s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.70069s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+results/news_full_seq_run1.log
+[seq] epoch 199 time 2.68694s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.70047s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+results/news_full_seq_run2.log
+[seq] epoch 199 time 2.69431s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.70778s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+results/news_full_seq_run3.log
+[seq] epoch 199 time 2.71651s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.73016s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+Convergence
+Gisette seq
+[seq] epoch 1 time 0.0124584s train_loss 7.56955 train_acc 0.755208 test_loss 7.55779 test_acc 0.755833
+[seq] epoch 10 time 0.122071s train_loss 24.4036 train_acc 0.926667 test_loss 24.4957 test_acc 0.923333
+[seq] epoch 20 time 0.244027s train_loss 20.6094 train_acc 0.9525 test_loss 20.8627 test_acc 0.943333
+[seq] epoch 30 time 0.365783s train_loss 18.6564 train_acc 0.966458 test_loss 19.019 test_acc 0.953333
+[seq] epoch 40 time 0.487453s train_loss 17.4829 train_acc 0.97375 test_loss 17.8859 test_acc 0.959167
+[seq] epoch 50 time 0.609035s train_loss 16.7588 train_acc 0.976458 test_loss 17.3056 test_acc 0.956667
+[seq] epoch 60 time 0.730939s train_loss 16.1335 train_acc 0.983125 test_loss 16.7955 test_acc 0.959167
+[seq] epoch 70 time 0.852634s train_loss 15.6769 train_acc 0.988333 test_loss 16.4155 test_acc 0.960833
+[seq] epoch 80 time 0.975932s train_loss 15.5468 train_acc 0.985 test_loss 16.1957 test_acc 0.961667
+[seq] epoch 90 time 1.09884s train_loss 15.5996 train_acc 0.981667 test_loss 16.2213 test_acc 0.959167
+[seq] epoch 100 time 1.22107s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+News-small seq
+[seq] epoch 1 time 0.00216916s train_loss 0.690467 train_acc 0.517417 test_loss 0.690304 test_acc 0.512133
+[seq] epoch 20 time 0.0297836s train_loss 0.649035 train_acc 0.781648 test_loss 0.647262 test_acc 0.794381
+[seq] epoch 40 time 0.058913s train_loss 0.615156 train_acc 0.806287 test_loss 0.612612 test_acc 0.814815
+[seq] epoch 60 time 0.0880029s train_loss 0.5882 train_acc 0.819881 test_loss 0.58548 test_acc 0.835249
+[seq] epoch 80 time 0.117012s train_loss 0.566216 train_acc 0.830926 test_loss 0.563746 test_acc 0.83908
+[seq] epoch 100 time 0.145812s train_loss 0.547905 train_acc 0.836873 test_loss 0.54599 test_acc 0.846743
+[seq] epoch 120 time 0.174649s train_loss 0.532389 train_acc 0.850467 test_loss 0.531243 test_acc 0.851852
+[seq] epoch 140 time 0.203645s train_loss 0.519058 train_acc 0.856415 test_loss 0.518828 test_acc 0.860792
+[seq] epoch 160 time 0.232621s train_loss 0.507476 train_acc 0.86661 test_loss 0.508263 test_acc 0.867178
+[seq] epoch 180 time 0.261562s train_loss 0.497326 train_acc 0.870858 test_loss 0.499194 test_acc 0.87484
+[seq] epoch 200 time 0.290713s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+News-full seq
+[seq] epoch 1 time 0.0141403s train_loss 0.691836 train_acc 0.675446 test_loss 0.691898 test_acc 0.664498
+[seq] epoch 20 time 0.270539s train_loss 0.67084 train_acc 0.673767 test_loss 0.672027 test_acc 0.665693
+[seq] epoch 40 time 0.540625s train_loss 0.65484 train_acc 0.676861 test_loss 0.657081 test_acc 0.670473
+[seq] epoch 60 time 0.810347s train_loss 0.642973 train_acc 0.680131 test_loss 0.646156 test_acc 0.672597
+[seq] epoch 80 time 1.08027s train_loss 0.633864 train_acc 0.684727 test_loss 0.637894 test_acc 0.675651
+[seq] epoch 100 time 1.35028s train_loss 0.626641 train_acc 0.689411 test_loss 0.631438 test_acc 0.680032
+[seq] epoch 120 time 1.62022s train_loss 0.620744 train_acc 0.692505 test_loss 0.626241 test_acc 0.683484
+[seq] epoch 140 time 1.8904s train_loss 0.615809 train_acc 0.695775 test_loss 0.621947 test_acc 0.686936
+[seq] epoch 160 time 2.16101s train_loss 0.61159 train_acc 0.701609 test_loss 0.618323 test_acc 0.69145
+[seq] epoch 180 time 2.43069s train_loss 0.607924 train_acc 0.706293 test_loss 0.615208 test_acc 0.694902
+[seq] epoch 200 time 2.70069s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
