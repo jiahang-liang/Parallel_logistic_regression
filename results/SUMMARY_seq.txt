@@ -1,0 +1,77 @@
+select=1:ncpus=1:mpiprocs=1 (sequential baseline)
+OpenMP: scripts/go_omp.pbs | MPI: scripts/go_mpi.pbs
+
+results/gisette_seq.log
+[seq] epoch 99 time 1.24614s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.25872s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/gisette_seq_run1.log
+[seq] epoch 99 time 1.24374s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.25638s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/gisette_seq_run2.log
+[seq] epoch 99 time 1.24738s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.25996s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/gisette_seq_run3.log
+[seq] epoch 99 time 1.2455s train_loss 15.133 train_acc 0.995 test_loss 16.0771 test_acc 0.960833
+[seq] epoch 100 time 1.25816s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+results/news_small_seq.log
+[seq] epoch 199 time 0.311166s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.312734s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_small_seq_run1.log
+[seq] epoch 199 time 0.311293s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.312867s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_small_seq_run2.log
+[seq] epoch 199 time 0.31185s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.313424s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_small_seq_run3.log
+[seq] epoch 199 time 0.311921s train_loss 0.48879 train_acc 0.874257 test_loss 0.49172 test_acc 0.879949
+[seq] epoch 200 time 0.313416s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+results/news_full_seq.log
+[seq] epoch 199 time 2.40066s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.41268s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+results/news_full_seq_run1.log
+[seq] epoch 199 time 2.38424s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.39606s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+results/news_full_seq_run2.log
+[seq] epoch 199 time 2.65548s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.66979s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+results/news_full_seq_run3.log
+[seq] epoch 199 time 2.88439s train_loss 0.604846 train_acc 0.709387 test_loss 0.61262 test_acc 0.698088
+[seq] epoch 200 time 2.89828s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221
+
+Convergence
+Gisette seq
+[seq] epoch 1 time 0.0127447s train_loss 7.56955 train_acc 0.755208 test_loss 7.55779 test_acc 0.755833
+[seq] epoch 10 time 0.125784s train_loss 24.4036 train_acc 0.926667 test_loss 24.4957 test_acc 0.923333
+[seq] epoch 20 time 0.25195s train_loss 20.6094 train_acc 0.9525 test_loss 20.8627 test_acc 0.943333
+[seq] epoch 30 time 0.377171s train_loss 18.6564 train_acc 0.966458 test_loss 19.019 test_acc 0.953333
+[seq] epoch 40 time 0.502779s train_loss 17.4829 train_acc 0.97375 test_loss 17.8859 test_acc 0.959167
+[seq] epoch 50 time 0.629142s train_loss 16.7588 train_acc 0.976458 test_loss 17.3056 test_acc 0.956667
+[seq] epoch 60 time 0.75519s train_loss 16.1335 train_acc 0.983125 test_loss 16.7955 test_acc 0.959167
+[seq] epoch 70 time 0.880685s train_loss 15.6769 train_acc 0.988333 test_loss 16.4155 test_acc 0.960833
+[seq] epoch 80 time 1.00672s train_loss 15.5468 train_acc 0.985 test_loss 16.1957 test_acc 0.961667
+[seq] epoch 90 time 1.13279s train_loss 15.5996 train_acc 0.981667 test_loss 16.2213 test_acc 0.959167
+[seq] epoch 100 time 1.25872s train_loss 15.0943 train_acc 0.996042 test_loss 16.0211 test_acc 0.9625
+News-small seq
+[seq] epoch 1 time 0.00239313s train_loss 0.690467 train_acc 0.517417 test_loss 0.690304 test_acc 0.512133
+[seq] epoch 20 time 0.0321067s train_loss 0.649035 train_acc 0.781648 test_loss 0.647262 test_acc 0.794381
+[seq] epoch 40 time 0.0633429s train_loss 0.615156 train_acc 0.806287 test_loss 0.612612 test_acc 0.814815
+[seq] epoch 60 time 0.0947086s train_loss 0.5882 train_acc 0.819881 test_loss 0.58548 test_acc 0.835249
+[seq] epoch 80 time 0.12588s train_loss 0.566216 train_acc 0.830926 test_loss 0.563746 test_acc 0.83908
+[seq] epoch 100 time 0.157033s train_loss 0.547905 train_acc 0.836873 test_loss 0.54599 test_acc 0.846743
+[seq] epoch 120 time 0.188194s train_loss 0.532389 train_acc 0.850467 test_loss 0.531243 test_acc 0.851852
+[seq] epoch 140 time 0.219406s train_loss 0.519058 train_acc 0.856415 test_loss 0.518828 test_acc 0.860792
+[seq] epoch 160 time 0.250557s train_loss 0.507476 train_acc 0.86661 test_loss 0.508263 test_acc 0.867178
+[seq] epoch 180 time 0.281572s train_loss 0.497326 train_acc 0.870858 test_loss 0.499194 test_acc 0.87484
+[seq] epoch 200 time 0.312734s train_loss 0.488367 train_acc 0.874257 test_loss 0.491354 test_acc 0.879949
+News-full seq
+[seq] epoch 1 time 0.014705s train_loss 0.691836 train_acc 0.675446 test_loss 0.691898 test_acc 0.664498
+[seq] epoch 20 time 0.244011s train_loss 0.67084 train_acc 0.673767 test_loss 0.672027 test_acc 0.665693
+[seq] epoch 40 time 0.484684s train_loss 0.65484 train_acc 0.676861 test_loss 0.657081 test_acc 0.670473
+[seq] epoch 60 time 0.726144s train_loss 0.642973 train_acc 0.680131 test_loss 0.646156 test_acc 0.672597
+[seq] epoch 80 time 0.96756s train_loss 0.633864 train_acc 0.684727 test_loss 0.637894 test_acc 0.675651
+[seq] epoch 100 time 1.20983s train_loss 0.626641 train_acc 0.689411 test_loss 0.631438 test_acc 0.680032
+[seq] epoch 120 time 1.45151s train_loss 0.620744 train_acc 0.692505 test_loss 0.626241 test_acc 0.683484
+[seq] epoch 140 time 1.69168s train_loss 0.615809 train_acc 0.695775 test_loss 0.621947 test_acc 0.686936
+[seq] epoch 160 time 1.93176s train_loss 0.61159 train_acc 0.701609 test_loss 0.618323 test_acc 0.69145
+[seq] epoch 180 time 2.17253s train_loss 0.607924 train_acc 0.706293 test_loss 0.615208 test_acc 0.694902
+[seq] epoch 200 time 2.41268s train_loss 0.604694 train_acc 0.709298 test_loss 0.612492 test_acc 0.698221

@@ -1,0 +1,121 @@
+select=1:ncpus=64:mpiprocs=1 (OpenMP single-node scaling)
+nproc=64
+Threads tested: 1 2 4 8 16 32 64
+
+results/gisette_omp_1.log
+OpenMP threads used: 1
+Training time: 1.08902 seconds
+results/gisette_omp_2.log
+OpenMP threads used: 2
+Training time: 0.934695 seconds
+results/gisette_omp_4.log
+OpenMP threads used: 4
+Training time: 0.717393 seconds
+results/gisette_omp_8.log
+OpenMP threads used: 8
+Training time: 0.67458 seconds
+results/gisette_omp_16.log
+OpenMP threads used: 16
+Training time: 0.64659 seconds
+results/gisette_omp_32.log
+OpenMP threads used: 32
+Training time: 0.64441 seconds
+results/gisette_omp_64.log
+OpenMP threads used: 64
+Training time: 0.674852 seconds
+results/gisette_omp8_run1.log
+OpenMP threads used: 8
+Training time: 0.676763 seconds
+results/gisette_omp8_run2.log
+OpenMP threads used: 8
+Training time: 0.673725 seconds
+results/gisette_omp8_run3.log
+OpenMP threads used: 8
+Training time: 0.677136 seconds
+results/gisette_omp64_run1.log
+OpenMP threads used: 64
+Training time: 0.672458 seconds
+results/gisette_omp64_run2.log
+OpenMP threads used: 64
+Training time: 0.675208 seconds
+results/gisette_omp64_run3.log
+OpenMP threads used: 64
+Training time: 0.688379 seconds
+results/news_small_omp_1.log
+OpenMP threads used: 1
+Training time: 0.418898 seconds
+results/news_small_omp_2.log
+OpenMP threads used: 2
+Training time: 0.548646 seconds
+results/news_small_omp_4.log
+OpenMP threads used: 4
+Training time: 0.558023 seconds
+results/news_small_omp_8.log
+OpenMP threads used: 8
+Training time: 0.66811 seconds
+results/news_small_omp_16.log
+OpenMP threads used: 16
+Training time: 0.952302 seconds
+results/news_small_omp_32.log
+OpenMP threads used: 32
+Training time: 1.51733 seconds
+results/news_small_omp_64.log
+OpenMP threads used: 64
+Training time: 2.66404 seconds
+results/news_small_omp8_run1.log
+OpenMP threads used: 8
+Training time: 0.664649 seconds
+results/news_small_omp8_run2.log
+OpenMP threads used: 8
+Training time: 0.667728 seconds
+results/news_small_omp8_run3.log
+OpenMP threads used: 8
+Training time: 0.667862 seconds
+results/news_small_omp64_run1.log
+OpenMP threads used: 64
+Training time: 2.76836 seconds
+results/news_small_omp64_run2.log
+OpenMP threads used: 64
+Training time: 2.67479 seconds
+results/news_small_omp64_run3.log
+OpenMP threads used: 64
+Training time: 2.71797 seconds
+results/news_full_omp_1.log
+OpenMP threads used: 1
+Training time: 2.22487 seconds
+results/news_full_omp_2.log
+OpenMP threads used: 2
+Training time: 2.072 seconds
+results/news_full_omp_4.log
+OpenMP threads used: 4
+Training time: 1.81055 seconds
+results/news_full_omp_8.log
+OpenMP threads used: 8
+Training time: 1.88268 seconds
+results/news_full_omp_16.log
+OpenMP threads used: 16
+Training time: 2.09674 seconds
+results/news_full_omp_32.log
+OpenMP threads used: 32
+Training time: 2.67914 seconds
+results/news_full_omp_64.log
+OpenMP threads used: 64
+Training time: 3.91019 seconds
+results/news_full_omp8_run1.log
+OpenMP threads used: 8
+Training time: 1.90058 seconds
+results/news_full_omp8_run2.log
+OpenMP threads used: 8
+Training time: 1.85772 seconds
+results/news_full_omp8_run3.log
+OpenMP threads used: 8
+Training time: 1.90391 seconds
+results/news_full_omp64_run1.log
+OpenMP threads used: 64
+Training time: 3.90681 seconds
+results/news_full_omp64_run2.log
+OpenMP threads used: 64
+Training time: 3.95781 seconds
+results/news_full_omp64_run3.log
+OpenMP threads used: 64
+Training time: 3.91137 seconds
