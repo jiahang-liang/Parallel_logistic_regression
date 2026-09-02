@@ -50,16 +50,22 @@ From root directory,
 
 (if problem occurs)
 ```bash
-dos2unix scripts/go_all.pbs
+dos2unix scripts/go_seq.pbs scripts/go_mpi.pbs scripts/go_omp.pbs
 ```
 
-Then submit:
+Then submit all three:
 
 ```bash
-qsub scripts/go_all.pbs
+qsub scripts/go_seq.pbs
+qsub scripts/go_mpi.pbs
+qsub scripts/go_omp.pbs
 ```
 
-`go_all.pbs` uses queue **`shortCPUQ`**, `#PBS -l select=16:ncpus=4:mpiprocs=4` (16 nodes, 64 CPUs). MPI jobs use an Open MPI hostfile built from `$PBS_NODEFILE`. Logs go to `results/`; PBS stdout/stderr go to `lr_all_64.o<JOBID>` and `lr_all_64.e<JOBID>`. `results/SUMMARY.txt` is written at the end.
+`go_seq.pbs` uses queue **`shortCPUQ`**, `#PBS -l select=1:ncpus=1:mpiprocs=1` (1 core). Logs go to `results/`; PBS stdout/stderr go to `seq_1.o<JOBID>` and `seq_1.e<JOBID>`. `results/SUMMARY_seq.txt` is written at the end.
+
+`go_mpi.pbs` uses queue **`shortCPUQ`**, `#PBS -l select=16:ncpus=4:mpiprocs=4` (16 nodes, 64 CPUs). MPI jobs use an Open MPI hostfile built from `$PBS_NODEFILE`. Logs go to `results/`; PBS stdout/stderr go to `mpi_64.o<JOBID>` and `mpi_64.e<JOBID>`. `results/SUMMARY_mpi.txt` is written at the end.
+
+`go_omp.pbs` uses queue **`shortCPUQ`**, `#PBS -l select=1:ncpus=64:mpiprocs=1` (1 node, 64 CPUs). Logs go to `results/`; PBS stdout/stderr go to `omp_64.o<JOBID>` and `omp_64.e<JOBID>`. `results/SUMMARY_omp.txt` is written at the end.
 
 ### Step 7  Check job status
 
@@ -74,18 +80,21 @@ Q = queued, R = running, gone from list = finished (or failed).
 When finished,
 
 ```bash
-ls lr_all_64.o* lr_all_64.e* 2>/dev/null
+ls seq_1.o* seq_1.e* mpi_64.o* mpi_64.e* omp_64.o* omp_64.e* 2>/dev/null
 ls results/*.log | wc -l
-cat results/SUMMARY.txt
+cat results/SUMMARY_seq.txt
+cat results/SUMMARY_mpi.txt
+cat results/SUMMARY_omp.txt
 tail -2 results/gisette_mpi_64.log
+tail -2 results/gisette_omp_64.log
 ```
 
-Expect ninety-one `.log` files and `Training finished` in `gisette_mpi_64.log` without `not enough slots`.
+Expect `Training finished` in `gisette_mpi_64.log` without `not enough slots`, and `OpenMP threads used: 64` in `gisette_omp_64.log`.
 
 ### Step 8 Download results
 for the results, right-click Download or drag to local folder.
 
-Same download `results/SUMMARY.txt` or updated `data/` if needed.
+Same download `results/SUMMARY_seq.txt`, `results/SUMMARY_mpi.txt`, `results/SUMMARY_omp.txt`, or updated `data/` if needed.
 
 ## Data
 
@@ -130,20 +139,20 @@ cd src
 mpirun -np 4 ./mpi ../data/20newsgroup_full/20newsgroup_full_train.svm ../data/20newsgroup_full/20newsgroup_full_test.svm 200 1.0 0.001 0
 ```
 
-if need MPI with several nodes on the cluster, do not just run `mpirun -np 64 ./mpi ...` (fails with `not enough slots`), submit the script "qsub scripts/go_all.pbs"
-which runs all seq / OpenMP / MPI experiments and starts MPI on every node that PBS gives.
+if need MPI with several nodes on the cluster, do not just run `mpirun -np 64 ./mpi ...` (fails with `not enough slots`), submit `qsub scripts/go_mpi.pbs`
+which runs all MPI experiments and starts MPI on every node that PBS gives. Sequential baseline is in `go_seq.pbs`; OpenMP scaling is in `go_omp.pbs` (single node, 64 CPUs).
 
 `overlap`: 0 = `MPI_Allreduce`, 1 = `MPI_Iallreduce`.
 
 Defaults: Gisette 100 epochs, lr 0.01, lambda 0.01; 20News 200 epochs, lr 1.0, lambda 0.001.
 
-in `go_all.pbs`: OpenMP 1, 2, 4, 8 threads; MPI 1, 2, 4, 8, 16, 32, 64 processes.
+in `go_omp.pbs`: OpenMP 1, 2, 4, 8, 16, 32, 64 threads. in `go_mpi.pbs`: MPI 1, 2, 4, 8, 16, 32, 64 processes (+ overlap). in `go_seq.pbs`: sequential baseline + repeats.
 
 Output: one line per epoch with time, train/test loss and accuracy.
 
 ## Results
 
-91 log files in `results/`, `results/SUMMARY.txt`. Figures in `plots/`: `accuracy.png`, `speedup.png`, `efficiency.png`.
+Log files in `results/`, `results/SUMMARY_seq.txt`, `results/SUMMARY_mpi.txt`, `results/SUMMARY_omp.txt`. Figures in `plots/`: `accuracy.png`, `speedup.png`, `efficiency.png`.
 
 ## Clean
 

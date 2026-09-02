@@ -1,0 +1,98 @@
+#!/bin/bash
+#PBS -N seq_1
+#PBS -q shortCPUQ
+#PBS -l walltime=01:00:00
+#PBS -l select=1:ncpus=1:mpiprocs=1
+
+cd $PBS_O_WORKDIR
+
+source /etc/profile
+module purge
+module load GCC/12.3.0
+module load OpenMPI/4.1.5-GCC-12.3.0
+
+cd src && make && cd ..
+
+BIN=src
+mkdir -p results
+
+echo "Start $(date)"
+echo "Sequential baseline: 1 core, single node"
+echo "OpenMP: scripts/go_omp.pbs | MPI: scripts/go_mpi.pbs"
+
+# GISETTE  4800 train, 5000 dense features
+# epochs=100  lr=0.01  lambda=0.01
+
+GT=data/gisette/gisette_local_train.svm
+GS=data/gisette/gisette_local_test.svm
+GE=100; GLR=0.01; GL=0.01
+
+echo "--- Gisette seq ---"
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq.log 2>&1
+echo "--- Gisette seq repeats ---"
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq_run1.log 2>&1
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq_run2.log 2>&1
+$BIN/seq  $GT $GS $GE $GLR $GL          > results/gisette_seq_run3.log 2>&1
+
+# 20NEWSGROUP SMALL  1177 train, 130107 sparse features, 2 classes
+# epochs=200  lr=1.0  lambda=0.001
+
+NT=data/20newsgroup/20newsgroup_train.svm
+NS=data/20newsgroup/20newsgroup_test.svm
+NE=200; NLR=1.0; NL=0.001
+
+echo "--- News-small seq ---"
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq.log 2>&1
+echo "--- News-small seq repeats ---"
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq_run1.log 2>&1
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq_run2.log 2>&1
+$BIN/seq  $NT $NS $NE $NLR $NL          > results/news_small_seq_run3.log 2>&1
+
+# 20NEWSGROUP FULL  11314 train, 130107 sparse features, 20 classes->binary
+# epochs=200  lr=1.0  lambda=0.001
+
+FT=data/20newsgroup_full/20newsgroup_full_train.svm
+FS=data/20newsgroup_full/20newsgroup_full_test.svm
+FE=200; FLR=1.0; FL=0.001
+
+echo "--- News-full seq ---"
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq.log 2>&1
+echo "--- News-full seq repeats ---"
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq_run1.log 2>&1
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq_run2.log 2>&1
+$BIN/seq  $FT $FS $FE $FLR $FL          > results/news_full_seq_run3.log 2>&1
+
+echo "Done $(date)"
+
+append_log_tail() {
+    local f="$1"
+    [ -f "$f" ] || return 0
+    echo "$f"
+    tail -2 "$f"
+}
+
+{
+echo "select=1:ncpus=1:mpiprocs=1 (sequential baseline)"
+echo "OpenMP: scripts/go_omp.pbs | MPI: scripts/go_mpi.pbs"
+echo ""
+
+for tag in gisette news_small news_full; do
+    append_log_tail "results/${tag}_seq.log"
+    append_log_tail "results/${tag}_seq_run1.log"
+    append_log_tail "results/${tag}_seq_run2.log"
+    append_log_tail "results/${tag}_seq_run3.log"
+done
+
+echo ""
+echo "Convergence"
+echo "Gisette seq"
+grep -E "^\[seq\] epoch (1|10|20|30|40|50|60|70|80|90|100) " results/gisette_seq.log
+
+echo "News-small seq"
+grep -E "^\[seq\] epoch (1|20|40|60|80|100|120|140|160|180|200) " results/news_small_seq.log
+
+echo "News-full seq"
+grep -E "^\[seq\] epoch (1|20|40|60|80|100|120|140|160|180|200) " results/news_full_seq.log
+} > results/SUMMARY_seq.txt
+
+cat results/SUMMARY_seq.txt

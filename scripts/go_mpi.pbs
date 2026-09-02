@@ -1,0 +1,201 @@
+#!/bin/bash
+#PBS -N mpi_64
+#PBS -q shortCPUQ
+#PBS -l walltime=03:00:00
+#PBS -l select=16:ncpus=4:mpiprocs=4
+
+cd $PBS_O_WORKDIR
+
+source /etc/profile
+module purge
+module load GCC/12.3.0
+module load OpenMPI/4.1.5-GCC-12.3.0
+
+cd src && make && cd ..
+
+BIN=src
+mkdir -p results
+
+setup_mpi_hostfile() {
+    if [ -z "$PBS_NODEFILE" ] || [ ! -f "$PBS_NODEFILE" ]; then
+        echo "PBS_NODEFILE is missing and cannot use multi-node MPI." >&2
+        exit 1
+    fi
+
+    MPI_HOSTFILE="$PBS_O_WORKDIR/.mpi_hostfile"
+    TOTAL_LINES=$(wc -l < "$PBS_NODEFILE")
+    UNIQUE_NODES=$(sort -u "$PBS_NODEFILE" | wc -l)
+
+    if [ "$TOTAL_LINES" -gt "$UNIQUE_NODES" ]; then
+        awk '{ count[$1]++ } END { for (host in count) print host, "slots=" count[host] }' \
+            "$PBS_NODEFILE" | sort > "$MPI_HOSTFILE"
+    else
+        CPUS_PER_NODE=4
+        sort -u "$PBS_NODEFILE" | while read -r node; do
+            echo "${node} slots=${CPUS_PER_NODE}"
+        done > "$MPI_HOSTFILE"
+    fi
+
+    TOTAL_SLOTS=$(awk -F'slots=' '{sum += $2} END {print sum + 0}' "$MPI_HOSTFILE")
+
+    echo "PBS_NODEFILE lines: ${TOTAL_LINES}, unique nodes: ${UNIQUE_NODES}"
+    echo "Open MPI hostfile (${TOTAL_SLOTS} slots):"
+    cat "$MPI_HOSTFILE"
+
+    if [ "$TOTAL_SLOTS" -lt 64 ]; then
+        echo "only ${TOTAL_SLOTS} MPI slots in hostfile (needs 64)." >&2
+    fi
+}
+
+run_mpi() {
+    local np="$1"
+    shift
+    mpirun -np "$np" --hostfile "$MPI_HOSTFILE" --bind-to none --map-by slot "$@"
+}
+
+echo "Start $(date)"
+echo "16 nodes x 4 CPUs = 64 total cores"
+echo "MPI scaling: 1, 2, 4, 8, 16, 32, 64 processes"
+echo "Sequential: scripts/go_seq.pbs | OpenMP: scripts/go_omp.pbs"
+
+setup_mpi_hostfile
+
+echo "MPI test with np=16"
+run_mpi 16 /bin/hostname | sort | uniq -c
+
+# GISETTE  4800 train, 5000 dense features
+# epochs=100  lr=0.01  lambda=0.01
+
+GT=data/gisette/gisette_local_train.svm
+GS=data/gisette/gisette_local_test.svm
+GE=100; GLR=0.01; GL=0.01
+
+echo "--- Gisette mpi ---"
+run_mpi 1  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_1.log 2>&1
+run_mpi 2  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_2.log 2>&1
+run_mpi 4  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_4.log 2>&1
+run_mpi 8  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_8.log 2>&1
+run_mpi 16 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_16.log 2>&1
+run_mpi 32 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_32.log 2>&1
+run_mpi 64 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi_64.log 2>&1
+echo "--- Gisette mpi overlap ---"
+run_mpi 2  $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_2_overlap.log 2>&1
+run_mpi 4  $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_4_overlap.log 2>&1
+run_mpi 8  $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_8_overlap.log 2>&1
+run_mpi 16 $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_16_overlap.log 2>&1
+run_mpi 32 $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_32_overlap.log 2>&1
+run_mpi 64 $BIN/mpi $GT $GS $GE $GLR $GL 1 > results/gisette_mpi_64_overlap.log 2>&1
+echo "--- Gisette mpi repeats ---"
+run_mpi 8  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi8_run1.log 2>&1
+run_mpi 8  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi8_run2.log 2>&1
+run_mpi 8  $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi8_run3.log 2>&1
+run_mpi 32 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi32_run1.log 2>&1
+run_mpi 32 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi32_run2.log 2>&1
+run_mpi 32 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi32_run3.log 2>&1
+run_mpi 64 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi64_run1.log 2>&1
+run_mpi 64 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi64_run2.log 2>&1
+run_mpi 64 $BIN/mpi $GT $GS $GE $GLR $GL 0 > results/gisette_mpi64_run3.log 2>&1
+
+# 20NEWSGROUP SMALL  1177 train, 130107 sparse features, 2 classes
+# epochs=200  lr=1.0  lambda=0.001
+
+NT=data/20newsgroup/20newsgroup_train.svm
+NS=data/20newsgroup/20newsgroup_test.svm
+NE=200; NLR=1.0; NL=0.001
+
+echo "--- News-small mpi ---"
+run_mpi 1  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_1.log 2>&1
+run_mpi 2  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_2.log 2>&1
+run_mpi 4  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_4.log 2>&1
+run_mpi 8  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_8.log 2>&1
+run_mpi 16 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_16.log 2>&1
+run_mpi 32 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_32.log 2>&1
+run_mpi 64 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi_64.log 2>&1
+echo "--- News-small mpi overlap ---"
+run_mpi 2  $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_2_overlap.log 2>&1
+run_mpi 4  $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_4_overlap.log 2>&1
+run_mpi 8  $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_8_overlap.log 2>&1
+run_mpi 16 $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_16_overlap.log 2>&1
+run_mpi 32 $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_32_overlap.log 2>&1
+run_mpi 64 $BIN/mpi $NT $NS $NE $NLR $NL 1 > results/news_small_mpi_64_overlap.log 2>&1
+echo "--- News-small mpi repeats ---"
+run_mpi 8  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi8_run1.log 2>&1
+run_mpi 8  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi8_run2.log 2>&1
+run_mpi 8  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi8_run3.log 2>&1
+run_mpi 2  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi2_run1.log 2>&1
+run_mpi 2  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi2_run2.log 2>&1
+run_mpi 2  $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi2_run3.log 2>&1
+run_mpi 64 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi64_run1.log 2>&1
+run_mpi 64 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi64_run2.log 2>&1
+run_mpi 64 $BIN/mpi $NT $NS $NE $NLR $NL 0 > results/news_small_mpi64_run3.log 2>&1
+
+# 20NEWSGROUP FULL  11314 train, 130107 sparse features, 20 classes->binary
+# epochs=200  lr=1.0  lambda=0.001
+
+FT=data/20newsgroup_full/20newsgroup_full_train.svm
+FS=data/20newsgroup_full/20newsgroup_full_test.svm
+FE=200; FLR=1.0; FL=0.001
+
+echo "--- News-full mpi ---"
+run_mpi 1  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_1.log 2>&1
+run_mpi 2  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_2.log 2>&1
+run_mpi 4  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_4.log 2>&1
+run_mpi 8  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_8.log 2>&1
+run_mpi 16 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_16.log 2>&1
+run_mpi 32 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_32.log 2>&1
+run_mpi 64 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi_64.log 2>&1
+echo "--- News-full mpi overlap ---"
+run_mpi 2  $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_2_overlap.log 2>&1
+run_mpi 4  $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_4_overlap.log 2>&1
+run_mpi 8  $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_8_overlap.log 2>&1
+run_mpi 16 $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_16_overlap.log 2>&1
+run_mpi 32 $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_32_overlap.log 2>&1
+run_mpi 64 $BIN/mpi $FT $FS $FE $FLR $FL 1 > results/news_full_mpi_64_overlap.log 2>&1
+echo "--- News-full mpi repeats ---"
+run_mpi 8  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi8_run1.log 2>&1
+run_mpi 8  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi8_run2.log 2>&1
+run_mpi 8  $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi8_run3.log 2>&1
+run_mpi 64 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi64_run1.log 2>&1
+run_mpi 64 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi64_run2.log 2>&1
+run_mpi 64 $BIN/mpi $FT $FS $FE $FLR $FL 0 > results/news_full_mpi64_run3.log 2>&1
+
+echo "Done $(date)"
+
+append_log_tail() {
+    local f="$1"
+    [ -f "$f" ] || return 0
+    echo "$f"
+    tail -2 "$f"
+}
+
+{
+echo "select=16:ncpus=4:mpiprocs=4 (64 cores total)"
+echo "Sequential: scripts/go_seq.pbs | OpenMP: scripts/go_omp.pbs"
+echo ""
+
+for tag in gisette news_small news_full; do
+    for t in 1 2 4 8 16 32 64; do
+        append_log_tail "results/${tag}_mpi_${t}.log"
+    done
+    for t in 2 4 8 16 32 64; do
+        append_log_tail "results/${tag}_mpi_${t}_overlap.log"
+    done
+    for label in 8 64; do
+        for r in 1 2 3; do
+            append_log_tail "results/${tag}_mpi${label}_run${r}.log"
+        done
+    done
+    if [ "$tag" = "news_small" ]; then
+        for r in 1 2 3; do
+            append_log_tail "results/${tag}_mpi2_run${r}.log"
+        done
+    fi
+    if [ "$tag" = "gisette" ]; then
+        for r in 1 2 3; do
+            append_log_tail "results/${tag}_mpi32_run${r}.log"
+        done
+    fi
+done
+} > results/SUMMARY_mpi.txt
+
+cat results/SUMMARY_mpi.txt

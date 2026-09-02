@@ -1,0 +1,134 @@
+#!/bin/bash
+#PBS -N omp_64
+#PBS -q shortCPUQ
+#PBS -l walltime=03:00:00
+#PBS -l select=1:ncpus=64:mpiprocs=1
+
+cd $PBS_O_WORKDIR
+
+source /etc/profile
+module purge
+module load GCC/12.3.0
+module load OpenMPI/4.1.5-GCC-12.3.0
+
+cd src && make && cd ..
+
+BIN=src
+mkdir -p results
+
+THREADS="1 2 4 8 16 32 64"
+
+run_omp() {
+    local threads="$1"
+    shift
+    export OMP_NUM_THREADS="$threads"
+    export OMP_PLACES=cores
+    export OMP_PROC_BIND=spread
+    "$@"
+}
+
+check_node_cores() {
+    CORES=$(nproc)
+    echo "PBS / node check"
+    echo "PBS select=1:ncpus=64:mpiprocs=1 (intended single-node 64 cores)"
+    echo "PBS_NODEFILE: $(wc -l < "$PBS_NODEFILE") line(s)"
+    sort -u "$PBS_NODEFILE" | wc -l | xargs echo "Unique nodes:"
+    echo "nproc=$CORES"
+    lscpu | grep -E '^CPU\(s\)|Core|Thread|Socket|Model name' || true
+
+    if [ "$CORES" -lt 64 ]; then
+        echo "WARNING: only $CORES cores visible; 64-thread runs will oversubscribe." >&2
+    fi
+}
+
+run_scaling() {
+    local tag="$1"
+    local train="$2"
+    local test="$3"
+    local epochs="$4"
+    local lr="$5"
+    local lambda="$6"
+
+    echo "${tag} omp scaling"
+    for t in $THREADS; do
+        echo "  threads=$t"
+        run_omp "$t" $BIN/omp "$train" "$test" "$epochs" "$lr" "$lambda" "$t" \
+            > "results/${tag}_omp_${t}.log" 2>&1
+    done
+}
+
+run_repeats() {
+    local tag="$1"
+    local train="$2"
+    local test="$3"
+    local epochs="$4"
+    local lr="$5"
+    local lambda="$6"
+    local threads="$7"
+    local label="$8"
+
+    echo "--- ${tag} omp ${threads} repeats (x3) ---"
+    run_omp "$threads" $BIN/omp "$train" "$test" "$epochs" "$lr" "$lambda" "$threads" \
+        > "results/${tag}_omp${label}_run1.log" 2>&1
+    run_omp "$threads" $BIN/omp "$train" "$test" "$epochs" "$lr" "$lambda" "$threads" \
+        > "results/${tag}_omp${label}_run2.log" 2>&1
+    run_omp "$threads" $BIN/omp "$train" "$test" "$epochs" "$lr" "$lambda" "$threads" \
+        > "results/${tag}_omp${label}_run3.log" 2>&1
+}
+
+echo "Start $(date)"
+echo "OpenMP scaling on single node: $THREADS threads"
+check_node_cores
+
+GT=data/gisette/gisette_local_train.svm
+GS=data/gisette/gisette_local_test.svm
+GE=100; GLR=0.01; GL=0.01
+
+run_scaling gisette "$GT" "$GS" "$GE" "$GLR" "$GL"
+run_repeats gisette "$GT" "$GS" "$GE" "$GLR" "$GL" 8 8
+run_repeats gisette "$GT" "$GS" "$GE" "$GLR" "$GL" 64 64
+
+NT=data/20newsgroup/20newsgroup_train.svm
+NS=data/20newsgroup/20newsgroup_test.svm
+NE=200; NLR=1.0; NL=0.001
+
+run_scaling news_small "$NT" "$NS" "$NE" "$NLR" "$NL"
+run_repeats news_small "$NT" "$NS" "$NE" "$NLR" "$NL" 8 8
+run_repeats news_small "$NT" "$NS" "$NE" "$NLR" "$NL" 64 64
+
+FT=data/20newsgroup_full/20newsgroup_full_train.svm
+FS=data/20newsgroup_full/20newsgroup_full_test.svm
+FE=200; FLR=1.0; FL=0.001
+
+run_scaling news_full "$FT" "$FS" "$FE" "$FLR" "$FL"
+run_repeats news_full "$FT" "$FS" "$FE" "$FLR" "$FL" 8 8
+run_repeats news_full "$FT" "$FS" "$FE" "$FLR" "$FL" 64 64
+
+echo "Done $(date)"
+
+append_log_tail() {
+    local f="$1"
+    [ -f "$f" ] || return 0
+    echo "$f"
+    tail -2 "$f"
+}
+
+{
+echo "select=1:ncpus=64:mpiprocs=1 (OpenMP single-node scaling)"
+echo "nproc=$(nproc)"
+echo "Threads tested: $THREADS"
+echo ""
+
+for tag in gisette news_small news_full; do
+    for t in $THREADS; do
+        append_log_tail "results/${tag}_omp_${t}.log"
+    done
+    for label in 8 64; do
+        for r in 1 2 3; do
+            append_log_tail "results/${tag}_omp${label}_run${r}.log"
+        done
+    done
+done
+} > results/SUMMARY_omp.txt
+
+cat results/SUMMARY_omp.txt
